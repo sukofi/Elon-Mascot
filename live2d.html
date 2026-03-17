@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  background: transparent;
+  overflow: hidden;
+}
+#canvas {
+  position: absolute;
+  top: 0; left: 0;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js"></script>
+
+<script>
+(async () => {
+  const W = window.innerWidth  || 400;
+  const H = window.innerHeight || 600;
+
+  const app = new PIXI.Application({
+    view: document.getElementById('canvas'),
+    width: W,
+    height: H,
+    backgroundAlpha: 0,
+    antialias: true,
+    resolution: window.devicePixelRatio || 1,
+    autoDensity: true,
+  });
+
+  // Qt側からモデルパスを受け取る（QWebChannel経由か初期化パラメータ）
+  // file:// で読み込まれる場合は相対パスがそのまま動く
+  const modelPath = './model/034star.model3.json';
+
+  let model;
+  try {
+    model = await PIXI.live2d.Live2DModel.from(modelPath, {
+      autoInteract: false,
+    });
+  } catch(e) {
+    console.error('Live2D load error:', e);
+    return;
+  }
+
+  app.stage.addChild(model);
+
+  // 中央配置・スケール調整
+  model.anchor.set(0.5, 1.0);
+  model.position.set(W / 2, H);
+  const scale = Math.min(W / model.internalModel.width, H / model.internalModel.height) * 0.95;
+  model.scale.set(scale);
+
+  // Qt側から呼び出せる関数
+  window.setExpression = (name) => {
+    try { model.expression(name); } catch(e) {}
+  };
+  window.setMotion = (group, index) => {
+    try { model.motion(group || '', index || 0); } catch(e) {}
+  };
+  window.setIdle = () => {
+    try { model.motion('', 1); } catch(e) {}  // taiki
+  };
+  window.setTalk = () => {
+    try { model.motion('', 0); } catch(e) {}  // gsku
+  };
+  window.setAlert = () => {
+    try { model.expression('kowai'); } catch(e) {}
+  };
+  window.setThink = () => {
+    try { model.expression('nho'); } catch(e) {}
+  };
+  window.resetState = () => {
+    try {
+      model.expression();
+      model.motion('', 1);
+    } catch(e) {}
+  };
+
+  // 口パクパラメータ（LipSyncがなければ手動）
+  let lipValue = 0;
+  let lipTarget = 0;
+  window.setLip = (v) => { lipTarget = v; };
+
+  // アイドルモーション開始
+  window.setIdle();
+
+  app.ticker.add(() => {
+    lipValue += (lipTarget - lipValue) * 0.3;
+    try {
+      model.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', lipValue);
+    } catch(e) {}
+  });
+
+  // Qt側に準備完了を通知
+  if (window.qt && window.qt.webChannelTransport) {
+    // QWebChannel使用時
+  }
+  document.title = 'READY';
+  console.log('Live2D model loaded');
+})();
+</script>
+</body>
+</html>

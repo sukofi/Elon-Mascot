@@ -1,0 +1,57 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "034star.moc3",
+		"Textures": [
+			"034star.2048/texture_00.png"
+		],
+		"DisplayInfo": "034star.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "kowai",
+				"File": "expressions/kowai.exp3.json"
+			},
+			{
+				"Name": "naa",
+				"File": "expressions/naa.exp3.json"
+			},
+			{
+				"Name": "nho",
+				"File": "expressions/nho.exp3.json"
+			},
+			{
+				"Name": "niyari",
+				"File": "expressions/niyari.exp3.json"
+			},
+			{
+				"Name": "regoff",
+				"File": "expressions/regoff.exp3.json"
+			}
+		],
+		"Motions": {
+			"": [
+				{
+					"File": "animations/gsku.motion3.json",
+					"FadeInTime": 0,
+					"FadeOutTime": 0
+				},
+				{
+					"File": "animations/taiki.motion3.json"
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

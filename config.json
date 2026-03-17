@@ -1,0 +1,26 @@
+{
+  "_comment": "マスコット設定ファイル",
+  "elon_api_url": "http://100.105.12.49:8765",
+  "elon_api_key": "elon_secret_key_2025",
+  "session_id": "mascot",
+  "timeout": 60,
+  "voicevox_url": "http://127.0.0.1:50021",
+  "voicevox_speaker": 1,
+  "ticktick": {
+    "enabled": true,
+    "ical_url": "webcal://ticktick.com/pub/calendar/feeds/xtd7kssor53d/basic.ics"
+  },
+  "trello": {
+    "enabled": true,
+    "api_key": "YOUR_TRELLO_API_KEY",
+    "token": "YOUR_TRELLO_TOKEN",
+    "board_id": "62b3b140f7c83a8e929a2227",
+    "exclude_lists": "不明,大吉KW,対策KW",
+    "my_lists": "構成完了,dirチェック,入稿完了"
+  },
+  "gcal": {
+    "enabled": false,
+    "credentials_path": "~/.config/elon-mascot/gcal_credentials.json",
+    "token_path": "~/.config/elon-mascot/gcal_token.json"
+  }
+}
